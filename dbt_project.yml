@@ -41,3 +41,11 @@ models:
     one_load:
       +materialized: table
       +schema: silver
+seeds:
+  my_dbt_project:
+    countries:
+      file: Cricket Dataset(Sheet2).csv
+      schema: raw         
+      materialized: table # The materialization of the seed table (default is table)
+      quoting: true       # Ensures column names are quoted in the target table
+
