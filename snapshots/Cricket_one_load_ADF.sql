@@ -1,11 +1,11 @@
-{% snapshot cricket_one_load %}
+
+{% snapshot cricket_one_load_ADF %}
     {{
         config(
             target_schema="Silver",
             unique_key=["delivery_number","over_numer","inning_number","match_id"],
             strategy="check",
             check_cols=[
-                "id",
                 "batter",
                 "bowler",
                 "non_striker",
@@ -23,11 +23,9 @@
             ]
         )
     }}
-
     with
         cte as (
             select
-                cast(t.id as int) as id,
                 batter,
                 bowler,
                 non_striker,
@@ -46,21 +44,8 @@
                 team_type,
                 match_start_date,
                 player_out
-                /*current_timestamp() as get_time_column,
-                md5(
-                    concat(
-                        coalesce(t.delivery_number, ''),
-                        '|',
-                        coalesce(t.over_numer, ''),
-                        '|',
-                        coalesce(t.inning_number, ''),
-                        '|',
-                        coalesce(t.match_id, '')
-                    )
-                ) as hash_id*/
-            from cricket_dev.bronze.cricket_one_load as t
+            from cricket_dev.bronze.cricket_one_load_ADF as t
         )
     select *
-    from cte order by id
-
+    from cte order by delivery_number,over_numer,inning_number,match_id
 {% endsnapshot %}
